@@ -31,6 +31,7 @@ export const test = base.extend<PomFixtures, { forEachWorker: void }>({
 
     // Clean up the fixture.
   },
+
   forEachTest: [
     async ({ page }, use) => {
       // This code runs before every test.
