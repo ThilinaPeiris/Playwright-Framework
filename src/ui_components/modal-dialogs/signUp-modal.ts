@@ -30,7 +30,7 @@ export class SignUpModal {
     await this.signUpButton.click();
   }
 
-  async sinUpAs_A_StandardUser(userName: string, password: string) {
+  async signUpAs_A_StandardUser(userName: string, password: string) {
     await this.fillUserName(userName);
     await this.fillPassword(password);
     await this.clickSignUpButton();
@@ -38,11 +38,9 @@ export class SignUpModal {
 
   async isVisible() {
     await expect(this.modal).toBeVisible();
-    console.log("Sign up modal is visible.");
   }
 
   async isClosed() {
     await expect(this.modal).not.toBeVisible();
-    console.log("Sign up modal is no longer visible.");
   }
 }

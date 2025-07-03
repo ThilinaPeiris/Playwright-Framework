@@ -16,12 +16,14 @@ test("Verify adding an item to Shopping Cart", async ({
   loginModal,
   productDetailsPage,
   headerSection,
+  cartPage,
+  orderModal,
 }) => {
-  //await homePage.goto(Constants.BASEURL);
-  //await headerSection.clicksignUpLink();
-  //await signUpModal.sinUpAs_A_StandardUser("bhagy91-1", "@blaze-1234-1");
-  await headerSection.clicklogInLink();
-  await loginModal.loginAs_A_StandardUser("bhagy91-1", "@blaze-1234-1");
+  await homePage.goto(Constants.BASEURL);
+  await headerSection.clickSignUpLink();
+  await signUpModal.signUpAs_A_StandardUser("bhagy91-2", "@blaze-1234-2");
+  await headerSection.clickLogInLink();
+  await loginModal.loginAs_A_StandardUser("bhagy91-2", "@blaze-1234-2");
   await homePage.clickLaptopsCategory();
   await homePage.waitUntilProductsVisible();
   const productTitles = await homePage.getProductTitles();
@@ -34,7 +36,6 @@ test("Verify adding an item to Shopping Cart", async ({
     "Validated that Sony laptops are displayed in the search results."
   );
 
-  // Add Sony vaio i5
   const sonyVaioI5LaptopLocator = await homePage.getProductLocatorByName(
     "Sony vaio i5"
   );
@@ -45,11 +46,10 @@ test("Verify adding an item to Shopping Cart", async ({
   await productDetailsPage.isTheCorrectProductDisplayed("Sony vaio i5");
   await productDetailsPage.clickaddToCartButton();
 
-  // Navigate back to home and then laptops category to add another product
-  await headerSection.clickhomePageLink();
+  await headerSection.isVisible();
+  await headerSection.clickHomePageLink();
   await homePage.clickLaptopsCategory();
 
-  // Add Sony vaio i5
   const sonyVaioI7LaptopLocator = await homePage.getProductLocatorByName(
     "Sony vaio i7"
   );
@@ -59,4 +59,17 @@ test("Verify adding an item to Shopping Cart", async ({
   await productDetailsPage.isVisible();
   await productDetailsPage.isTheCorrectProductDisplayed("Sony vaio i7");
   await productDetailsPage.clickaddToCartButton();
+
+  await headerSection.isVisible();
+  await headerSection.clickCartLink();
+  await cartPage.isVisible();
+  await cartPage.clickDeleteProductButton();
+  await cartPage.isVisible();
+
+  await orderModal.clickPurchaseButton();
+  await orderModal.isOrderConfirmed();
+  await orderModal.clickConfirmationOk();
+
+  await expect(page).toHaveURL(Constants.BASEURL);
+  console.log("Successfully placed the order and returned to home page.");
 });

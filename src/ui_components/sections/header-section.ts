@@ -1,4 +1,4 @@
-import type { Page, Locator } from "@playwright/test";
+import { type Page, type Locator, expect } from "@playwright/test";
 import { Constants } from "../../utils/app-constants";
 
 export class HeaderSection {
@@ -13,7 +13,7 @@ export class HeaderSection {
     this.homePageLink = this.page.getByRole("link", { name: "Home" });
     this.contactLink = this.page.getByRole("link", { name: "Contact" });
     this.aboutUsLink = this.page.getByRole("link", { name: "About Us" });
-    this.cartLink = this.page.getByRole("link", { name: "Cart" });
+    this.cartLink = this.page.getByRole("link", { name: "Cart", exact: true });
     this.logInLink = this.page.getByRole("link", { name: "Log in" });
     this.signUpLink = this.page.getByRole("link", { name: "Sign Up" });
   }
@@ -22,33 +22,37 @@ export class HeaderSection {
     await this.page.goto(url);
   }
 
-  async clickhomePageLink() {
+  async clickHomePageLink() {
     await this.homePageLink.click();
     console.log('Clicked "Home Page" link.');
   }
 
-  async clickcontactLink() {
+  async clickContactLink() {
     await this.contactLink.click();
     console.log('Clicked "Contact" link.');
   }
 
-  async clickaboutUsLink() {
+  async clickAboutUsLink() {
     await this.aboutUsLink.click();
     console.log('Clicked "About Us" link.');
   }
 
-  async clickcartLink() {
+  async clickCartLink() {
     await this.cartLink.click();
     console.log('Clicked "Cart" link.');
   }
 
-  async clicklogInLink() {
+  async clickLogInLink() {
     await this.logInLink.click();
     console.log('Clicked "Log In" link.');
   }
 
-  async clicksignUpLink() {
+  async clickSignUpLink() {
     await this.signUpLink.click();
     console.log('Clicked "Sign up" link.');
+  }
+
+  async isVisible() {
+    await expect(this.cartLink).toBeVisible();
   }
 }
