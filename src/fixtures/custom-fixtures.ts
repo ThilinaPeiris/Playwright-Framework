@@ -1,12 +1,14 @@
 import { test as base } from "@playwright/test";
 import { LoginPage } from "../pages/login-page";
 import { InventoryPage } from "../pages/inventory-page";
+import { HeaderSection } from "../pages/sections/header-section";
 import { Constants } from "../utils/app-constants";
 
 // Declare the types of your fixtures.
 type PomFixtures = {
   loginPage: LoginPage;
   inventoryPage: InventoryPage;
+  headerSection: HeaderSection;
   forEachTest: void;
 };
 
@@ -28,6 +30,15 @@ export const test = base.extend<PomFixtures, { forEachWorker: void }>({
 
     // Use the fixture value in the test.
     await use(new InventoryPage(page));
+
+    // Clean up the fixture.
+  },
+
+  headerSection: async ({ page }, use) => {
+    // Set up the fixture.
+
+    // Use the fixture value in the test.
+    await use(new HeaderSection(page));
 
     // Clean up the fixture.
   },

@@ -1,5 +1,5 @@
 export class Constants {
-  public static readonly STANDARD_USER_NAME: string = "standard_user";
-  public static readonly STANDARD_USER_PASSWORD: string = "secret_sauce";
-  public static readonly BASEURL: string = "https://www.saucedemo.com";
+  public static readonly STANDARD_USER_NAME: string = "bhagy91";
+  public static readonly STANDARD_USER_PASSWORD: string = "@blaze1234";
+  public static readonly BASEURL: string = "https://www.demoblaze.com/";
 }
