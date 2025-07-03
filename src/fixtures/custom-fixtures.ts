@@ -1,13 +1,17 @@
 import { test as base } from "@playwright/test";
-import { LoginPage } from "../pages/login-page";
-import { InventoryPage } from "../pages/inventory-page";
-import { HeaderSection } from "../pages/sections/header-section";
+import { HomePage } from "../ui_components/pages/home-page";
+import { ProductDetailsPage } from "../ui_components/pages/productDetails-page";
+import { SignUpModal } from "../ui_components/modal-dialogs/signUp-modal";
+import { LoginModal } from "../ui_components/modal-dialogs/login-modal";
+import { HeaderSection } from "../ui_components/sections/header-section";
 import { Constants } from "../utils/app-constants";
 
 // Declare the types of your fixtures.
 type PomFixtures = {
-  loginPage: LoginPage;
-  inventoryPage: InventoryPage;
+  homePage: HomePage;
+  signUpModal: SignUpModal;
+  loginModal: LoginModal;
+  productDetailsPage: ProductDetailsPage;
   headerSection: HeaderSection;
   forEachTest: void;
 };
@@ -15,32 +19,34 @@ type PomFixtures = {
 // Extend base test by providing "LoginPage" and "InventoryPage".
 // This new "test" can be used in multiple test files, and each of them will get the fixtures.
 export const test = base.extend<PomFixtures, { forEachWorker: void }>({
-  loginPage: async ({ page }, use) => {
+  homePage: async ({ page }, use) => {
     // Set up the fixture.
-    const loginPageObj = new LoginPage(page);
+    const homePageObj = new HomePage(page);
 
     // Use the fixture value in the test.
-    await use(loginPageObj);
+    await use(homePageObj);
 
     // Clean up the fixture.
   },
 
-  inventoryPage: async ({ page }, use) => {
-    // Set up the fixture.
+  signUpModal: async ({ page }, use) => {
+    const signUpPageObj = new SignUpModal(page);
+    await use(signUpPageObj);
+  },
 
-    // Use the fixture value in the test.
-    await use(new InventoryPage(page));
+  loginModal: async ({ page }, use) => {
+    const loginPageObj = new LoginModal(page);
+    await use(loginPageObj);
+  },
 
-    // Clean up the fixture.
+  productDetailsPage: async ({ page }, use) => {
+    const productDetailsObj = new ProductDetailsPage(page);
+    await use(productDetailsObj);
   },
 
   headerSection: async ({ page }, use) => {
-    // Set up the fixture.
-
-    // Use the fixture value in the test.
-    await use(new HeaderSection(page));
-
-    // Clean up the fixture.
+    const headerSectionObj = new HeaderSection(page);
+    await use(headerSectionObj);
   },
 
   forEachTest: [

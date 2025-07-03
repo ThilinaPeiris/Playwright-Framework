@@ -1,15 +1,16 @@
-import type { Page, Locator } from "@playwright/test";
-import { Constants } from "../utils/app-constants";
+import { type Page, type Locator, expect } from "@playwright/test";
 
-export class LoginPage {
+export class LoginModal {
+  private readonly modal: Locator;
   private readonly userNameInput: Locator;
   private readonly passwordInput: Locator;
   private readonly logInButton: Locator;
 
   constructor(public readonly page: Page) {
-    this.userNameInput = this.page.locator("#user-name");
-    this.passwordInput = this.page.locator("#password");
-    this.logInButton = this.page.locator("#login-button");
+    this.modal = page.locator("#logInModal");
+    this.userNameInput = this.page.locator("#loginusername");
+    this.passwordInput = this.page.locator("#loginpassword");
+    this.logInButton = this.page.getByRole("button", { name: "Log in" });
   }
 
   async goto(url: string) {
@@ -32,5 +33,10 @@ export class LoginPage {
     await this.fillUserName(userName);
     await this.fillPassword(password);
     await this.clickLoginButton();
+  }
+
+  async isVisible() {
+    await expect(this.modal).toBeVisible();
+    console.log("Log in modal is visible.");
   }
 }

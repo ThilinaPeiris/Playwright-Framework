@@ -24,25 +24,31 @@ export class HeaderSection {
 
   async clickhomePageLink() {
     await this.homePageLink.click();
+    console.log('Clicked "Home Page" link.');
   }
 
   async clickcontactLink() {
     await this.contactLink.click();
+    console.log('Clicked "Contact" link.');
   }
 
   async clickaboutUsLink() {
     await this.aboutUsLink.click();
+    console.log('Clicked "About Us" link.');
   }
 
   async clickcartLink() {
     await this.cartLink.click();
+    console.log('Clicked "Cart" link.');
   }
 
   async clicklogInLink() {
     await this.logInLink.click();
+    console.log('Clicked "Log In" link.');
   }
 
   async clicksignUpLink() {
     await this.signUpLink.click();
+    console.log('Clicked "Sign up" link.');
   }
 }
