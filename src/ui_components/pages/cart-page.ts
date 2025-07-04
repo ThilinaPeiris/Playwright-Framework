@@ -21,15 +21,12 @@ export class CartPage {
   }
 
   async clickPlaceOrderButton() {
+    await this.placeOrderButton.waitFor({ state: "visible" });
     await this.placeOrderButton.click();
   }
 
   async clickDeleteProductButton() {
+    await this.deleteProductButton.waitFor({ state: "visible" });
     await this.deleteProductButton.click();
-  }
-
-  async isVisible() {
-    await expect(this.placeOrderButton).toBeVisible();
-    console.log("Cart Page is loaded.");
   }
 }

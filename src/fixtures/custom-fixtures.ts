@@ -24,13 +24,8 @@ type PomFixtures = {
 // This new "test" can be used in multiple test files, and each of them will get the fixtures.
 export const test = base.extend<PomFixtures, { forEachWorker: void }>({
   homePage: async ({ page }, use) => {
-    // Set up the fixture.
     const homePageObj = new HomePage(page);
-
-    // Use the fixture value in the test.
     await use(homePageObj);
-
-    // Clean up the fixture.
   },
 
   signUpModal: async ({ page }, use) => {

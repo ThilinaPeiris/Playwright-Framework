@@ -16,7 +16,9 @@ export class HomePage {
   }
 
   async goto(url: string) {
-    await this.page.goto(url);
+    await this.page.goto(url, {
+      waitUntil: "domcontentloaded",
+    });
   }
 
   async clickLaptopsCategory() {
@@ -30,7 +32,7 @@ export class HomePage {
   }
 
   async getProductLocatorByName(productName: string): Promise<Locator> {
-    return this.page.locator(`.card-title:has-text("${productName}")`);
+    return this.page.locator(`.card-title:has-text("${productName}")`).first();
   }
 
   async waitUntilProductsVisible() {

@@ -9,7 +9,7 @@ export class OrderModal {
   private readonly monthInput: Locator;
   private readonly yearInput: Locator;
   private readonly purchaseButton: Locator;
-  private readonly confirmationModalDialog: Locator;
+  private readonly confirmationModal: Locator;
   private readonly confirmationMessage: Locator;
   private readonly confirmationOkButton: Locator;
 
@@ -21,20 +21,14 @@ export class OrderModal {
     this.cardInput = page.locator("#card");
     this.monthInput = page.locator("#month");
     this.yearInput = page.locator("#year");
-    this.purchaseButton = page.getByRole("button", { name: "Purchase" });
-    this.confirmationModalDialog = page.locator(
+    this.purchaseButton = page.locator('button[onclick="purchaseOrder()"]');
+    this.confirmationModal = page.locator(
       ".sweet-alert.showSweetAlert.visible"
     );
-    this.confirmationMessage = this.confirmationModalDialog.getByRole(
-      "heading",
-      {
-        name: "Thank you for your purchase!",
-      }
-    );
-    this.confirmationOkButton = this.confirmationModalDialog.getByRole(
-      "button",
-      { name: "OK" }
-    );
+    this.confirmationMessage = this.confirmationModal.locator("h2");
+    this.confirmationOkButton = this.confirmationModal.getByRole("button", {
+      name: "OK",
+    });
   }
 
   async goto(url: string) {
@@ -90,13 +84,20 @@ export class OrderModal {
   }
 
   async isOrderConfirmed() {
-    await this.confirmationModalDialog.waitFor({ state: "visible" });
+    await this.confirmationModal.waitFor({
+      state: "visible",
+    });
+    //await expect(this.confirmationModalDialog).toBeVisible();
     await expect(this.confirmationMessage).toHaveText(
       "Thank you for your purchase!"
     );
   }
 
   async clickConfirmationOk() {
-    await this.confirmationOkButton.click();
+    await this.confirmationOkButton.waitFor({
+      state: "visible",
+      timeout: 10000,
+    });
+    await this.confirmationOkButton.click({ timeout: 5000 });
   }
 }

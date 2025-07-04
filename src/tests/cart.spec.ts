@@ -1,15 +1,8 @@
 import { test, expect } from "../fixtures/custom-fixtures";
 import { Constants } from "../utils/app-constants";
+import { Utilities } from "../utils/utilities";
 
-// test("Verify valid login as a Standard User", async ({ page, loginPage }) => {
-//   await loginPage.loginAs_A_StandardUser(
-//     Constants.STANDARD_USER_NAME,
-//     Constants.STANDARD_USER_PASSWORD
-//   );
-//   await expect(page.locator(".app_logo")).toHaveText("Swag Labs");
-// });
-
-test("Verify adding an item to Shopping Cart", async ({
+test("Verify removing an item from Shopping Cart and purchase", async ({
   page,
   homePage,
   signUpModal,
@@ -20,10 +13,6 @@ test("Verify adding an item to Shopping Cart", async ({
   orderModal,
 }) => {
   await homePage.goto(Constants.BASEURL);
-  await headerSection.clickSignUpLink();
-  await signUpModal.signUpAs_A_StandardUser("bhagy91-2", "@blaze-1234-2");
-  await headerSection.clickLogInLink();
-  await loginModal.loginAs_A_StandardUser("bhagy91-2", "@blaze-1234-2");
   await homePage.clickLaptopsCategory();
   await homePage.waitUntilProductsVisible();
   const productTitles = await homePage.getProductTitles();
@@ -62,14 +51,68 @@ test("Verify adding an item to Shopping Cart", async ({
 
   await headerSection.isVisible();
   await headerSection.clickCartLink();
-  await cartPage.isVisible();
   await cartPage.clickDeleteProductButton();
-  await cartPage.isVisible();
+  await page.waitForLoadState("load");
+  await cartPage.clickPlaceOrderButton();
+  await page.waitForLoadState("load");
+  await orderModal.fillTheOrdersFormAsAStandardUser(
+    "Bhagy",
+    "Sri Lanka",
+    "Kandy",
+    "123-123-1234-12334",
+    "July",
+    "2025"
+  );
 
-  await orderModal.clickPurchaseButton();
+  // Intercept the /deletecart API call and its response ---
+  // We'll use Promise.all to await both the button click and the request/response.
+  // This ensures that the interceptor is ready *before* the action that triggers the request.
+  const [interceptedRequest, interceptedResponse] = await Promise.all([
+    page.waitForRequest(
+      (request) =>
+        request.url().includes("deletecart") && request.method() === "POST"
+    ),
+    page.waitForResponse(
+      (response) =>
+        response.url().includes("deletecart") &&
+        response.request().method() === "POST"
+    ),
+    // --- Step 5: Click the 'Purchase' button in the order modal dialog ---
+    // This action is now part of the Promise.all to ensure timing.
+    orderModal.clickPurchaseButton(), // Adjust locator if needed
+  ]);
+
+  //await orderModal.clickPurchaseButton();
+
+  // Assertions ---
+  expect(interceptedRequest.method()).toBe("POST");
+  expect(interceptedRequest.url()).toContain("deletecart");
+
+  console.log("Intercepted Request URL:", interceptedRequest.url());
+  console.log("Intercepted Request Method:", interceptedRequest.method());
+
+  // Get the request payload (postData)
+  const requestPayload = interceptedRequest.postData();
+  console.log("Request Payload:", requestPayload);
+
+  // If the cookie is sent as part of the JSON payload, parse and check it
+  if (requestPayload) {
+    try {
+      const parsedPayload = JSON.parse(requestPayload);
+      // Example: If the cookie value is expected in a field like 'cookieValue'
+      expect(parsedPayload).toHaveProperty("cookie");
+      expect(parsedPayload.cookie).toBe(name);
+    } catch (e) {
+      console.error("Could not parse request payload as JSON:", e);
+    }
+  } else {
+    console.log("No request payload found.");
+  }
+
+  // Expect a successful response (e.g., 200 OK)
+  expect(interceptedResponse?.status()).toBe(200);
+
   await orderModal.isOrderConfirmed();
   await orderModal.clickConfirmationOk();
-
-  await expect(page).toHaveURL(Constants.BASEURL);
-  console.log("Successfully placed the order and returned to home page.");
+  await expect(page).toHaveURL(Constants.BASEURL, { timeout: 10000 });
 });
