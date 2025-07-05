@@ -1,4 +1,4 @@
-**BlazeDemo Playwright Automation Framework (blazeDemo-softOne Branch)**  ^1^
+*BlazeDemo Playwright Automation Framework (blazeDemo-softOne Branch)* 
 
 This repository, specifically the
 
